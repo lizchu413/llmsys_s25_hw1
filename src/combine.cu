@@ -348,16 +348,26 @@ __global__ void reduceKernel(
 
     // __shared__ double cache[BLOCK_DIM]; // Uncomment this line if you want to use shared memory to store partial results
     int out_index[MAX_DIMS];
+    int in_index[MAX_DIMS];
 
     /// BEGIN ASSIGN1_2
-    /// TODO
     // 1. Define the position of the output element that this thread or this block will write to
     // 2. Convert the out_pos to the out_index according to out_shape
     // 3. Initialize the reduce_value to the output element
     // 4. Iterate over the reduce_dim dimension of the input array to compute the reduced value
     // 5. Write the reduced value to out memory
-    
-    assert(false && "Not Implemented");
+    int out_pos = blockDim.x * blockIdx.x + threadIdx.x;
+    to_index(out_pos, out_shape, out_index);
+    broadcast_index(out_index, out_shape, a_shape, in_index, shape_size, shape_size);
+    if (out_pos < out_size) {
+        for (int i = 0; i < a_strides[reduce_dim]; i++) {
+            int in_pos = index_to_position(in_index, a_strides, shape_size);
+            reduce_value = fn(fn_id, reduce_value, a_storage[in_pos]);
+            in_index[reduce_dim] += 1;
+        }
+        out[out_pos] = reduce_value;
+    }
+
     /// END ASSIGN1_2
 }
 
@@ -423,7 +433,7 @@ __global__ void zipKernel(
     // 8. Apply the binary function to the input elements in a_array & b_array and write the output to the out memory
     int i = blockDim.x * blockIdx.x + threadIdx.x;
     if (i < out_size) {
-        to_index(i, out_shape, out_index, shape_size);
+        to_index(i, out_shape, out_index, out_shape_size);
         int out_pos = index_to_position(out_index, out_shape, out_shape_size); // also just i
         broadcast_index(out_index, out_shape, a_shape, a_index, out_shape_size, a_shape_size);
         int a_pos = index_to_position(a_index, a_strides, a_shape_size);
