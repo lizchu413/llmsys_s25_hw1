@@ -300,8 +300,6 @@ __global__ void mapKernel(
         int in_pos = index_to_position(in_index, in_strides, shape_size);
         int out_pos = index_to_position(out_index, out_strides, shape_size); // this is also just i
         out[out_pos] = fn(fn_id, in_storage[in_pos]);
-        printf("i %d; in_pos %d; input: %d; output: %d\n",
-               i, in_pos, in_storage[in_pos], out[out_pos]);
     }
     /// END ASSIGN1_2
 }
@@ -414,7 +412,6 @@ __global__ void zipKernel(
     int b_index[MAX_DIMS];
 
     /// BEGIN ASSIGN1_2
-    /// TODO
     // Hints:
     // 1. Compute the position in the output array that this thread will write to
     // 2. Convert the position to the out_index according to out_shape
@@ -422,10 +419,18 @@ __global__ void zipKernel(
     // 4. Broadcast the out_index to the a_index according to a_shape
     // 5. Calculate the position of element in a_array according to a_index and a_strides
     // 6. Broadcast the out_index to the b_index according to b_shape
-    // 7.Calculate the position of element in b_array according to b_index and b_strides
+    // 7. Calculate the position of element in b_array according to b_index and b_strides
     // 8. Apply the binary function to the input elements in a_array & b_array and write the output to the out memory
-    
-    assert(false && "Not Implemented");
+    int i = blockDim.x * blockIdx.x + threadIdx.x;
+    if (i < out_size) {
+        to_index(i, out_shape, out_index, shape_size);
+        int out_pos = index_to_position(out_index, out_shape, out_shape_size); // also just i
+        broadcast_index(out_index, out_shape, a_shape, a_index, out_shape_size, a_shape_size);
+        int a_pos = index_to_position(a_index, a_strides, a_shape_size);
+        broadcast_index(out_index, out_shape, b_shape, b_index, out_shape_size, b_shape_size);
+        int b_pos = index_to_position(b_index, b_strides, b_shape_size);
+        out[out_pos] = fn(fn_id, a_storage[a_pos], b_storage[b_pos]);
+    }
     /// END ASSIGN1_2
 }
 
