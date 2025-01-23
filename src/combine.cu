@@ -357,7 +357,7 @@ __global__ void reduceKernel(
     // 4. Iterate over the reduce_dim dimension of the input array to compute the reduced value
     // 5. Write the reduced value to out memory
     int out_pos = blockDim.x * blockIdx.x + threadIdx.x;
-    to_index(out_pos, out_shape, out_index);
+    to_index(out_pos, out_shape, out_index, shape_size);
     broadcast_index(out_index, out_shape, a_shape, in_index, shape_size, shape_size);
     if (out_pos < out_size) {
         for (int i = 0; i < a_strides[reduce_dim]; i++) {
