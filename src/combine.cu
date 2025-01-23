@@ -358,16 +358,15 @@ __global__ void reduceKernel(
     // 5. Write the reduced value to out memory
     int out_pos = blockDim.x * blockIdx.x + threadIdx.x;
     to_index(out_pos, out_shape, out_index, shape_size);
-    broadcast_index(out_index, out_shape, a_shape, in_index, shape_size, shape_size);
+//    broadcast_index(out_index, out_shape, a_shape, in_index, shape_size, shape_size);
     if (out_pos < out_size) {
-        for (int i = 0; i < a_strides[reduce_dim]; i++) {
+        for (int i = 0; i < a_shape[reduce_dim]; i++) {
             int in_pos = index_to_position(in_index, a_strides, shape_size);
             reduce_value = fn(fn_id, reduce_value, a_storage[in_pos]);
-            in_index[reduce_dim] += 1;
+            out_index[reduce_dim] += 1;
         }
         out[out_pos] = reduce_value;
     }
-
     /// END ASSIGN1_2
 }
 
