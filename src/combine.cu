@@ -295,10 +295,10 @@ __global__ void mapKernel(
 
     int i = blockDim.x * blockIdx.x + threadIdx.x;
     if (i < out_size) {
-        to_index(i, out_shape, out_index, shape_size);
-        broadcast_index(out_index, out_shape, in_shape, in_index, shape_size, shape_size);
-        int in_pos = index_to_position(in_index, in_strides, shape_size);
-        int out_pos = index_to_position(out_index, out_strides, shape_size);
+        to_index(i, out_shape, &out_index, shape_size);
+        broadcast_index(&out_index, out_shape, in_shape, &in_index, shape_size, shape_size);
+        int in_pos = index_to_position(&in_index, in_strides, shape_size);
+        int out_pos = index_to_position(&out_index, out_strides, shape_size);
         out[out_pos] = fn(fn_id, in_storage[in_pos]);
     }
     /// END ASSIGN1_2
