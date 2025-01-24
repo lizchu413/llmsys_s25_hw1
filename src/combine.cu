@@ -357,30 +357,6 @@ __global__ void reduceKernel(
     int out_pos = blockDim.x * blockIdx.x + threadIdx.x;
     to_index(out_pos, out_shape, out_index, shape_size);
     float val = reduce_value;
-    // print debug
-    printf("out_pos: %d\nout shape: (", out_pos);
-    for (int j = 0; j < shape_size; j++) {
-        printf("%d, ", out_shape[j]);
-    }
-    printf(")\nout_index: (");
-    for (int j = 0; j < shape_size; j++) {
-        printf("%d, ", out_index[j]);
-    }
-    printf(")\nout_strides: (");
-    for (int j = 0; j < shape_size; j++) {
-        printf("%d, ", out_strides[j]);
-    }
-    printf(")\nreduce dimension: %d\n", reduce_dim);
-    printf("a_shape: (");
-    for (int j = 0; j < shape_size; j++) {
-        printf("%d, ", a_shape[j]);
-    }
-    printf(")\na_strides: (");
-    for (int j = 0; j < shape_size; j++) {
-        printf("%d, ", a_strides[j]);
-    }
-    printf(")\n");
-    // print debug
 
     if (out_pos < out_size) {
         for (int i = 0; i < a_shape[reduce_dim]; i++) {
