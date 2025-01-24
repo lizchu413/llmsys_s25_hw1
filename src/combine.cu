@@ -361,6 +361,7 @@ __global__ void reduceKernel(
     if (out_pos < out_size) {
         for (int i = 0; i < a_shape[reduce_dim]; i++) {
             int in_pos = index_to_position(out_index, a_strides, shape_size);
+            printf("in_pos: %d\n", in_pos);
             val = fn(fn_id, val, a_storage[in_pos]);
             out_index[reduce_dim] += 1;
         }
