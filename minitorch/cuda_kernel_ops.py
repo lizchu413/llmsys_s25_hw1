@@ -182,7 +182,7 @@ class CudaKernelOps(TensorOps):
                 out._tensor._shape.astype(np.int32),
                 out._tensor._strides.astype(np.int32),
                 out.size,
-                len(out._tensor._shape),
+                # len(out._tensor._shape),
                 a._tensor._storage,
                 a._tensor._shape.astype(np.int32),
                 a._tensor._strides.astype(np.int32),
