@@ -177,12 +177,6 @@ class CudaKernelOps(TensorOps):
 
             # BEGIN ASSIGN1_2
             # 1. Call the tensorReduce function implemented in CUDA
-            # print debug
-            print(f"out_shape: {out._tensor._shape.astype(np.int32)}; out_strides: {out._tensor._strides.astype(np.int32)}; out_size: {out.size}")
-            print(f"a_shape: {a._tensor._shape.astype(np.int32)}; a_strides: {a._tensor._strides.astype(np.int32)}; a_size: {a.size}")
-            print(f"dim: {dim}, reduce_value: {reduce_value}, shape_len: {len(a.shape)}")
-
-            # print debug
             lib.tensorReduce(
                 out._tensor._storage,
                 out._tensor._shape.astype(np.int32),
