@@ -347,7 +347,7 @@ __global__ void reduceKernel(
 
     // __shared__ double cache[BLOCK_DIM]; // Uncomment this line if you want to use shared memory to store partial results
     int out_index[MAX_DIMS];
-    int in_index[MAX_DIMS];
+//    int in_index[MAX_DIMS];
 
     /// BEGIN ASSIGN1_2
     // 1. Define the position of the output element that this thread or this block will write to
@@ -360,9 +360,9 @@ __global__ void reduceKernel(
     float val = reduce_value;
     if (out_pos < out_size) {
         for (int i = 0; i < a_shape[reduce_dim]; i++) {
-            int in_pos = index_to_position(in_index, a_strides, shape_size);
+            int in_pos = index_to_position(out_index, a_strides, shape_size);
             val = fn(fn_id, val, a_storage[in_pos]);
-            in_index[reduce_dim] += 1;
+            out_index[reduce_dim] += 1;
         }
         out[out_pos] = reduce_value;
     }
