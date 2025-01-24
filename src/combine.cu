@@ -293,12 +293,11 @@ __global__ void mapKernel(
     // 5. Calculate the position of element in out_array according to out_index and out_strides
     // 6. Apply the unary function to the input element and write the output to the out memory
 
-    int i = blockDim.x * blockIdx.x + threadIdx.x;
-    if (i < out_size) {
-        to_index(i, out_shape, out_index, shape_size);
+    int out_pos = blockDim.x * blockIdx.x + threadIdx.x;
+    if (out_pos < out_size) {
+        to_index(out_pos, out_shape, out_index, shape_size);
         broadcast_index(out_index, out_shape, in_shape, in_index, shape_size, shape_size);
         int in_pos = index_to_position(in_index, in_strides, shape_size);
-        int out_pos = index_to_position(out_index, out_strides, shape_size); // this is also just i
         out[out_pos] = fn(fn_id, in_storage[in_pos]);
     }
     /// END ASSIGN1_2
@@ -359,12 +358,11 @@ __global__ void reduceKernel(
     int out_pos = blockDim.x * blockIdx.x + threadIdx.x;
     to_index(out_pos, out_shape, out_index, shape_size);
     float val = reduce_value;
-//    broadcast_index(out_index, out_shape, a_shape, in_index, shape_size, shape_size);
     if (out_pos < out_size) {
         for (int i = 0; i < a_shape[reduce_dim]; i++) {
             int in_pos = index_to_position(in_index, a_strides, shape_size);
             val = fn(fn_id, val, a_storage[in_pos]);
-            out_index[reduce_dim] += 1;
+            in_index[reduce_dim] += 1;
         }
         out[out_pos] = reduce_value;
     }
@@ -431,10 +429,9 @@ __global__ void zipKernel(
     // 6. Broadcast the out_index to the b_index according to b_shape
     // 7. Calculate the position of element in b_array according to b_index and b_strides
     // 8. Apply the binary function to the input elements in a_array & b_array and write the output to the out memory
-    int i = blockDim.x * blockIdx.x + threadIdx.x;
-    if (i < out_size) {
-        to_index(i, out_shape, out_index, out_shape_size);
-        int out_pos = index_to_position(out_index, out_shape, out_shape_size); // also just i
+    int out_pos = blockDim.x * blockIdx.x + threadIdx.x;
+    if (out_pos < out_size) {
+        to_index(out_pos, out_shape, out_index, out_shape_size);
         broadcast_index(out_index, out_shape, a_shape, a_index, out_shape_size, a_shape_size);
         int a_pos = index_to_position(a_index, a_strides, a_shape_size);
         broadcast_index(out_index, out_shape, b_shape, b_index, out_shape_size, b_shape_size);
