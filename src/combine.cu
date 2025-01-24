@@ -347,7 +347,6 @@ __global__ void reduceKernel(
 
     // __shared__ double cache[BLOCK_DIM]; // Uncomment this line if you want to use shared memory to store partial results
     int out_index[MAX_DIMS];
-//    int in_index[MAX_DIMS];
 
     /// BEGIN ASSIGN1_2
     // 1. Define the position of the output element that this thread or this block will write to
@@ -358,6 +357,31 @@ __global__ void reduceKernel(
     int out_pos = blockDim.x * blockIdx.x + threadIdx.x;
     to_index(out_pos, out_shape, out_index, shape_size);
     float val = reduce_value;
+    // print debug
+    printf("out_pos: %d\nout shape: (", out_pos);
+    for (int j = 0; j < shape_size; j++) {
+        printf("%d, ", out_shape[shape_size]);
+    }
+    printf(")\nout_index: (");
+    for (int j = 0; j < shape_size; j++) {
+        printf("%d, ", out_index[shape_size]);
+    }
+    printf(")\nout_strides: (");
+    for (int j = 0; j < shape_size; j++) {
+        printf("%d, ", out_strides[shape_size]);
+    }
+    printf(")\nreduce dimension: %d\n", reduce_dim);
+    printf("a_shape: (");
+    for (int j = 0; j < shape_size; j++) {
+        printf("%d, ", a_shape[shape_size]);
+    }
+    printf(")\na_strides: (");
+    for (int j = 0; j < shape_size; j++) {
+        printf("%d, ", a_strides[shape_size]);
+    }
+    printf(")\n");
+    // print debug
+
     if (out_pos < out_size) {
         for (int i = 0; i < a_shape[reduce_dim]; i++) {
             int in_pos = index_to_position(out_index, a_strides, shape_size);
