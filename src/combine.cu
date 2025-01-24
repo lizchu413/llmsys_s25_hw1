@@ -365,7 +365,7 @@ __global__ void reduceKernel(
             val = fn(fn_id, val, a_storage[in_pos]);
             out_index[reduce_dim] += 1;
         }
-        out[out_pos] = reduce_value;
+        out[out_pos] = val;
     }
     /// END ASSIGN1_2
 }
