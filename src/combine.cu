@@ -219,8 +219,6 @@ __global__ void MatrixMultiplyKernel(
    * Returns:
    *   None (Fills in out array)
    */
-   // TODO DEBUG! DELETE ME AFTER
-   if (out_shape[1] > 2) return;
 
     __shared__ float a_shared[TILE][TILE];
     __shared__ float b_shared[TILE][TILE];
@@ -247,7 +245,6 @@ __global__ void MatrixMultiplyKernel(
     int thread_y = threadIdx.y;
     int i = block_y * TILE + thread_y;
     int j = block_x * TILE + thread_x;
-    printf("this thread is at: block (%d, %d), thread (%d, %d), index (%d, %d)\n", block_x, block_y, thread_x, thread_y, i, j);
 
     int out_pos = batch * out_strides[0] + i * out_strides[1] + j * out_strides[2];
     float res = 0;
