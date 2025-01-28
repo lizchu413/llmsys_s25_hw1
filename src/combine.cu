@@ -6,7 +6,7 @@
 
 #define BLOCK_DIM 1024
 #define MAX_DIMS 10
-#define TILE 32
+#define TILE 4
 
 #define ADD_FUNC       1
 #define MUL_FUNC       2
@@ -220,7 +220,6 @@ __global__ void MatrixMultiplyKernel(
    *   None (Fills in out array)
    */
 
-    TILE = 4;
     __shared__ float a_shared[TILE][TILE];
     __shared__ float b_shared[TILE][TILE];
 
