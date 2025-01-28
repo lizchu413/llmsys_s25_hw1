@@ -243,16 +243,16 @@ __global__ void MatrixMultiplyKernel(
     int block_y = blockIdx.y;
     int thread_x = threadIdx.x;
     int thread_y = threadIdx.y;
-    int i = block_y * TILE + thread_y;
-    int j = block_x * TILE + thread_x;
+    int row = block_y * TILE + thread_y;
+    int col = block_x * TILE + thread_x;
 
-    int out_pos = batch * out_strides[0] + i * out_strides[1] + j * out_strides[2];
+    int out_pos = batch * out_strides[0] + row * out_strides[1] + col * out_strides[2];
     float res = 0;
     for (int tile_idx = 0; tile_idx < n / TILE + 1; tile_idx++) {
         // move things into shared memory for each tile
         // their position (in the tile) corresponds to output position we want
-        a_shared[thread_y][thread_x] = a_storage[batch * a_batch_stride + i * out_strides[1] + (j + tile_idx * TILE) * out_strides[2]];
-        b_shared[thread_y][thread_x] = b_storage[batch * b_batch_stride + (i + tile_idx * TILE) * out_strides[1] + j * out_strides[2]];
+        a_shared[thread_y][thread_x] = a_storage[batch * a_batch_stride + (row + tile_idx * TILE) * out_strides[1] + col * out_strides[2]];
+        b_shared[thread_y][thread_x] = b_storage[batch * b_batch_stride + row * out_strides[1] + (col + tile_idx * TILE) * out_strides[2]];
         __syncthreads();
         // add partial values
         for (int k = 0; k < TILE; k++) {
