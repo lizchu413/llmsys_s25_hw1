@@ -259,7 +259,7 @@ __global__ void MatrixMultiplyKernel(
         __syncthreads();
         // add partial values
         for (int k = 0; i < TILE; k++) {
-            printf("combining these values: (%d, %d) from a_shared and (%d, %d) from b_shared\n", thread_Y, k, k, thread_x);
+            printf("combining these values: (%d, %d) from a_shared and (%d, %d) from b_shared\n", thread_y, k, k, thread_x);
             res += a_shared[thread_y][k] * b_shared[k][thread_x];
         }
         printf("done with this tile\n\n");
