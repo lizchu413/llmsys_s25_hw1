@@ -220,7 +220,7 @@ __global__ void MatrixMultiplyKernel(
    *   None (Fills in out array)
    */
    // TODO DEBUG! DELETE ME AFTER
-   if (out_shape[2] > 3) return;
+   if (out_shape[2] > 20) return;
 
     __shared__ float a_shared[TILE][TILE];
     __shared__ float b_shared[TILE][TILE];
