@@ -246,6 +246,8 @@ __global__ void MatrixMultiplyKernel(
     int row = block_y * TILE + thread_y;
     int col = block_x * TILE + thread_x;
 
+    if (row >= out_shape[1] || col >= out_shape[2]) return;
+
     int out_pos = batch * out_strides[0] + row * out_strides[1] + col * out_strides[2];
     float res = 0;
     for (int tile_idx = 0; tile_idx < n / TILE + 1; tile_idx++) {
