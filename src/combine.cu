@@ -243,8 +243,8 @@ __global__ void MatrixMultiplyKernel(
     int block_y = blockIdx.y;
     int thread_x = threadIdx.x;
     int thread_y = threadIdx.y;
-    int row = block_y * TILE + thread_y;
-    int col = block_x * TILE + thread_x;
+    int row = block_x * blockDim.x + thread_x;
+    int col = block_y * blockDim.y + thread_y;
 
     int out_pos = batch * out_strides[0] + row * out_strides[1] + col * out_strides[2];
     float res = 0;
@@ -252,20 +252,20 @@ __global__ void MatrixMultiplyKernel(
         // move things into shared memory for each tile
         // their position (in the tile) corresponds to output position we want
         if (row < a_shape[1] && (col + tile_idx * TILE) < a_shape[2]) {
-            a_shared[thread_y][thread_x] = a_storage[batch * a_batch_stride + row * a_strides[1] +
+            a_shared[thread_x][thread_y] = a_storage[batch * a_batch_stride + row * a_strides[1] +
                                                      (col + tile_idx * TILE) * a_strides[2]];
             printf("a_shared[%d][%d] = a_storage[%d][%d] = a_storage[%d]\n", thread_y, thread_x, row, col + tile_idx * TILE, batch * a_batch_stride + row * a_strides[1] +
                                                                          (col + tile_idx * TILE) * a_strides[2]);
         } else {
-            a_shared[thread_y][thread_x] = 0;
+            a_shared[thread_x][thread_y] = 0;
         }
         if ((row + tile_idx * TILE) < b_shape[1] && col < b_shape[2]) {
-            b_shared[thread_y][thread_x] = b_storage[batch * b_batch_stride + (row + tile_idx * TILE) * b_strides[1] +
+            b_shared[thread_x][thread_y] = b_storage[batch * b_batch_stride + (row + tile_idx * TILE) * b_strides[1] +
                                                      col * b_strides[2]];
             printf("b_shared[%d][%d] = b_storage[%d][%d] = b_storage[%d]\n", thread_y, thread_x, row + tile_idx * TILE, col, batch * b_batch_stride + (row + tile_idx * TILE) * b_strides[1] +
                                                                               col * b_strides[2]);
         } else {
-            b_shared[thread_y][thread_x] = 0;
+            b_shared[thread_x][thread_y] = 0;
         }
         __syncthreads();
         // add partial values if the thread we are at is needed
@@ -273,8 +273,8 @@ __global__ void MatrixMultiplyKernel(
         {
             for (int k = 0; k < TILE; k++) {
                 if (k < n) {
-                    printf("adding values a_shared[%d][%d] and b_shared[%d][%d] to out[%d][%d]\n", thread_y, k, k, thread_x, thread_y, thread_x);
-                    res += a_shared[thread_y][k] * b_shared[k][thread_x];
+                    printf("adding values a_shared[%d][%d] and b_shared[%d][%d] to out[%d][%d]\n", thread_x, k, k, thread_y,thread_x, thread_y );
+                    res += a_shared[thread_x][k] * b_shared[k][thread_y];
                 }
             }
         }
