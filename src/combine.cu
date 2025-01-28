@@ -254,9 +254,9 @@ __global__ void MatrixMultiplyKernel(
         if ((row + tile_idx * TILE) < a_shape[1] && col < a_shape[2]) {
             a_shared[thread_x][thread_y] = a_storage[batch * a_batch_stride + (row + tile_idx * TILE) * a_strides[1] +
                                                      (col) * a_strides[2]];
-//            if (tile_idx > 0) {
-//                printf("a_shared[%d][%d] = a_storage[%d][%d] = a_storage[%d]\n", thread_x, thread_y, row, col + tile_idx * TILE, batch * a_batch_stride + row * a_strides[1] +(col + tile_idx * TILE) * a_strides[2]);
-//            }
+            if (tile_idx > 0 && (row + tile_idx * TILE) == 4) {
+                printf("a_shared[%d][%d] = a_storage[%d][%d] = a_storage[%d]\n", thread_x, thread_y, row + tile_idx * TILE , col , batch * a_batch_stride + (row + tile_idx * TILE) * a_strides[1] + col * a_strides[2]);
+            }
         } else {
             a_shared[thread_x][thread_y] = 0;
         }
