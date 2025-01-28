@@ -220,6 +220,7 @@ __global__ void MatrixMultiplyKernel(
    *   None (Fills in out array)
    */
 
+    TILE = 4;
     __shared__ float a_shared[TILE][TILE];
     __shared__ float b_shared[TILE][TILE];
 
