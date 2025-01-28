@@ -245,17 +245,24 @@ __global__ void MatrixMultiplyKernel(
     int thread_y = threadIdx.y;
     int row = block_y * TILE + thread_y;
     int col = block_x * TILE + thread_x;
-    printf("thread (%d, %d) responsible for idx (%d, %d)\n", thread_y, thread_x, row, col);
 
     int out_pos = batch * out_strides[0] + row * out_strides[1] + col * out_strides[2];
     float res = 0;
     for (int tile_idx = 0; tile_idx < n / TILE + 1; tile_idx++) {
         // move things into shared memory for each tile
         // their position (in the tile) corresponds to output position we want
-        if (row < a_shape[1] && (col + tile_idx * TILE) < a_shape[2])
-            a_shared[thread_y][thread_x] = a_storage[batch * a_batch_stride + row * a_strides[1] + (col + tile_idx * TILE) * a_strides[2]];
-        if ((row + tile_idx * TILE) < b_shape[1] && col < b_shape[2])
-            b_shared[thread_y][thread_x] = b_storage[batch * b_batch_stride + (row + tile_idx * TILE) * b_strides[1] + col * b_strides[2]];
+        if (row < a_shape[1] && (col + tile_idx * TILE) < a_shape[2]) {
+            a_shared[thread_y][thread_x] = a_storage[batch * a_batch_stride + row * a_strides[1] +
+                                                     (col + tile_idx * TILE) * a_strides[2]];
+            printf("a_shared[%d][%d] = a_storage[%d][%d] = a_storage[%d]\n", thread_y, thread_x, row, col + tile_idx * TILE, batch * a_batch_stride + row * a_strides[1] +
+                                                                         (col + tile_idx * TILE) * a_strides[2]);
+        }
+        if ((row + tile_idx * TILE) < b_shape[1] && col < b_shape[2]) {
+            b_shared[thread_y][thread_x] = b_storage[batch * b_batch_stride + (row + tile_idx * TILE) * b_strides[1] +
+                                                     col * b_strides[2]];
+            printf("b_shared[%d][%d] = b_storage[%d][%d] = b_storage[%d]\n", thread_y, thread_x, row + tile_idx * TILE, col, batch * b_batch_stride + (row + tile_idx * TILE) * b_strides[1] +
+                                                                             col * b_strides[2]);
+        }
         __syncthreads();
         // add partial values
         for (int k = 0; k < TILE; k++) {
