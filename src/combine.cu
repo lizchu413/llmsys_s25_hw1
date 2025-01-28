@@ -247,6 +247,7 @@ __global__ void MatrixMultiplyKernel(
     int thread_y = threadIdx.y;
     int i = block_x * TILE + thread_x;
     int j = block_y * TILE + thread_y;
+    printf("this thread is at: block (%d, %d), thread (%d, %d), index (%d, %d)\n", block_x, block_y, thread_x, thread_y, i, j);
 
     int out_pos = batch * out_strides[0] + i * out_strides[1] + j * out_strides[2];
     float res = 0;
