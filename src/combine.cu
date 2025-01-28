@@ -260,7 +260,7 @@ __global__ void MatrixMultiplyKernel(
         printf("storing idx (%d, %d, %d) into (%d, %d) of b_shared\n", batch, i + tile_idx * TILE, j, thread_y, thread_x);
         __syncthreads();
         // add partial values
-        for (int k = 0; i < TILE; k++) {
+        for (int k = 0; k < TILE; k++) {
             printf("combining these values: (%d, %d) from a_shared and (%d, %d) from b_shared\n", thread_y, k, k, thread_x);
             res += a_shared[thread_y][k] * b_shared[k][thread_x];
         }
