@@ -246,8 +246,6 @@ __global__ void MatrixMultiplyKernel(
     int row = block_y * TILE + thread_y;
     int col = block_x * TILE + thread_x;
 
-    if (row >= out_shape[1] || col >= out_shape[2]) return;
-
     int out_pos = batch * out_strides[0] + row * out_strides[1] + col * out_strides[2];
     float res = 0;
     for (int tile_idx = 0; tile_idx < n / TILE + 1; tile_idx++) {
@@ -266,11 +264,14 @@ __global__ void MatrixMultiplyKernel(
                                                                              col * b_strides[2]);
         }
         __syncthreads();
-        // add partial values
-        for (int k = 0; k < TILE; k++) {
-            if (k < n) {
-                printf("adding values a_shared[%d][%d] and b_shared[%d][%d] to out[%d][%d]\n", thread_y, k, k, thread_x, thread_y, thread_x);
-                res += a_shared[thread_y][k] * b_shared[k][thread_x];
+        // add partial values if the thread we are at is needed
+        if (out_pos < out_shape[0] * out_shape[1] * out_shape[2])
+        {
+            for (int k = 0; k < TILE; k++) {
+                if (k < n) {
+                    printf("adding values a_shared[%d][%d] and b_shared[%d][%d] to out[%d][%d]\n", thread_y, k, k, thread_x, thread_y, thread_x);
+                    res += a_shared[thread_y][k] * b_shared[k][thread_x];
+                }
             }
         }
         __syncthreads();
