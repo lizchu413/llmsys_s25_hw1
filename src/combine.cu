@@ -254,15 +254,15 @@ __global__ void MatrixMultiplyKernel(
         if (row < a_shape[1] && (col + tile_idx * TILE) < a_shape[2]) {
             a_shared[thread_x][thread_y] = a_storage[batch * a_batch_stride + row * a_strides[1] +
                                                      (col + tile_idx * TILE) * a_strides[2]];
-            printf("a_shared[%d][%d] = a_storage[%d][%d] = a_storage[%d]\n", thread_y, thread_x, row, col + tile_idx * TILE, batch * a_batch_stride + row * a_strides[1] +
-                                                                         (col + tile_idx * TILE) * a_strides[2]);
+            printf("a_shared[%d][%d] = a_storage[%d][%d] = a_storage[%d]\n", thread_x, thread_y, row, col + tile_idx * TILE,
+                                                                            batch * a_batch_stride + row * a_strides[1] +(col + tile_idx * TILE) * a_strides[2]);
         } else {
             a_shared[thread_x][thread_y] = 0;
         }
         if ((row + tile_idx * TILE) < b_shape[1] && col < b_shape[2]) {
             b_shared[thread_x][thread_y] = b_storage[batch * b_batch_stride + (row + tile_idx * TILE) * b_strides[1] +
                                                      col * b_strides[2]];
-            printf("b_shared[%d][%d] = b_storage[%d][%d] = b_storage[%d]\n", thread_y, thread_x, row + tile_idx * TILE, col, batch * b_batch_stride + (row + tile_idx * TILE) * b_strides[1] +
+            printf("b_shared[%d][%d] = b_storage[%d][%d] = b_storage[%d]\n", thread_x, thread_y, row + tile_idx * TILE, col, batch * b_batch_stride + (row + tile_idx * TILE) * b_strides[1] +
                                                                               col * b_strides[2]);
         } else {
             b_shared[thread_x][thread_y] = 0;
