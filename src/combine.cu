@@ -196,7 +196,7 @@ __global__ void MatrixMultiplyKernel(
     const int* b_strides
 ) {
   /**
-   * Multiply two (compact) matrices into an output (also comapct) matrix. Matrix a and b are both in a batch
+   * Multiply two (compact) matrices into an output (also compact) matrix. Matrix a and b are both in a batch
    * format, with shape [batch_size, m, n], [batch_size, n, p].
    * Requirements:
    * - All data must be first moved to shared memory.
@@ -212,7 +212,7 @@ __global__ void MatrixMultiplyKernel(
    *   a_storage: compact 1D array of size batch_size x m x n
    *   a_shape: shape of the a array
    *   a_strides: strides of the a array
-   *   b_storage: comapct 2D array of size batch_size x n x p
+   *   b_storage: compact 2D array of size batch_size x n x p
    *   b_shape: shape of the b array
    *   b_strides: strides of the b array
    *
@@ -228,10 +228,9 @@ __global__ void MatrixMultiplyKernel(
     int batch = blockIdx.z;
     int a_batch_stride = a_shape[0] > 1 ? a_strides[0] : 0;
     int b_batch_stride = b_shape[0] > 1 ? b_strides[0] : 0;
-
+    int n = a_shape[2];
 
     /// BEGIN ASSIGN1_2
-    /// TODO
     // Hints:
     // 1. Compute the row and column of the output matrix this block will compute
     // 2. Compute the position in the output array that this thread will write to
@@ -240,8 +239,28 @@ __global__ void MatrixMultiplyKernel(
     // 5. Compute the output tile for this thread block
     // 6. Synchronize to make sure all threads are done computing the output tile for (row, col)
     // 7. Write the output to global memory
+    int block_x = blockIdx.x;
+    int block_y = blockIdx.y;
+    int thread_x = threadIdx.x;
+    int thread_y = threadIdx.y;
+    int i = block_x * TILE + thread_x;
+    int j = block_y * TILE + thread_y;
 
-    assert(false && "Not Implemented");
+    int out_pos = batch * out_strides[0] + i * out_strides[1] + j * out_strides[2];
+    float res = 0;
+    for (int tile_idx = 0; tile_idx < n / TILE; tile_idx++) {
+        // move things into shared memory for each tile
+        // their position (in the tile) corresponds to output position we want
+        a_shared[thread_y][thread_x] = a_storage[batch * out_strides[0] + i * out_strides[1] + (j + tile_idx * TILE) * out_strides[2]];
+        b_shared[thread_y][thread_x] = b_storage[batch * out_strides[0] + (i + tile_idx * TILE) * out_strides[1] + j * out_strides[2]];
+        __syncthreads();
+        // add partial values
+        for (int k = 0; i < TILE; k++) {
+            res += a_shared[thread_y][k] * b_shared[k][thread_x];
+        }
+        __syncthreads();
+    }
+    out[out_pos] = res;
     /// END ASSIGN1_2
 }
 
