@@ -274,7 +274,9 @@ __global__ void MatrixMultiplyKernel(
             for (int k = 0; k < TILE; k++) {
                 if (k < n) {
                     printf("adding values a_shared[%d][%d] and b_shared[%d][%d] to out[%d][%d]\n", thread_x, k, k, thread_y,thread_x, thread_y );
+                    printf("res before: %d; aval: %d, bval: %d ", res, a_shared[thread_x][k], b_shared[k][thread_y]);
                     res += a_shared[thread_x][k] * b_shared[k][thread_y];
+                    printf("res after: %d\n", res);
                 }
             }
         }
