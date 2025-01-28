@@ -248,7 +248,7 @@ __global__ void MatrixMultiplyKernel(
 
     int out_pos = batch * out_strides[0] + row * out_strides[1] + col * out_strides[2];
     float res = 0;
-    for (int tile_idx = 0; tile_idx < n / TILE + 1; tile_idx++) {
+    for (int tile_idx = 0; tile_idx < ceil(n / (float)TILE); tile_idx++) {
         // move things into shared memory for each tile
         // their position (in the tile) corresponds to output position we want
         if (row < a_shape[1] && (col + tile_idx * TILE) < a_shape[2]) {
