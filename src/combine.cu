@@ -221,7 +221,6 @@ __global__ void MatrixMultiplyKernel(
    */
    // TODO DEBUG! DELETE ME AFTER
    if (out_shape[1] > 20) return;
-   printf("STILL HERE\n");
 
     __shared__ float a_shared[TILE][TILE];
     __shared__ float b_shared[TILE][TILE];
@@ -251,6 +250,7 @@ __global__ void MatrixMultiplyKernel(
 
     int out_pos = batch * out_strides[0] + i * out_strides[1] + j * out_strides[2];
     float res = 0;
+    printf("something is wrong with this number %d\n", n / TILE);
     for (int tile_idx = 0; tile_idx < n / TILE; tile_idx++) {
         printf("tile_idx: %d\n", tile_idx);
         // move things into shared memory for each tile
