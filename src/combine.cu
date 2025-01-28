@@ -250,7 +250,7 @@ __global__ void MatrixMultiplyKernel(
 
     int out_pos = batch * out_strides[0] + i * out_strides[1] + j * out_strides[2];
     float res = 0;
-    printf("something is wrong with this number %d\n", n / TILE);
+    printf("something is wrong with this number %d and numerator is %d denom is %d\n", n / TILE, n, TILE);
     for (int tile_idx = 0; tile_idx < n / TILE; tile_idx++) {
         printf("tile_idx: %d\n", tile_idx);
         // move things into shared memory for each tile
