@@ -221,7 +221,7 @@ __global__ void MatrixMultiplyKernel(
    */
    // TODO DEBUG! DELETE ME AFTER
    printf("HELLO outshape is %d %d %d\n", out_shape[0], out_shape[1], out_shape[2]);
-   if (out_shape[2] > 20) return;
+   if (out_shape[1] > 20) return;
 
     __shared__ float a_shared[TILE][TILE];
     __shared__ float b_shared[TILE][TILE];
