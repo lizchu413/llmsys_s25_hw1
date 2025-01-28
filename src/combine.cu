@@ -251,8 +251,8 @@ __global__ void MatrixMultiplyKernel(
     for (int tile_idx = 0; tile_idx < n / TILE; tile_idx++) {
         // move things into shared memory for each tile
         // their position (in the tile) corresponds to output position we want
-        a_shared[thread_y][thread_x] = a_storage[batch * out_strides[0] + i * out_strides[1] + (j + tile_idx * TILE) * out_strides[2]];
-        b_shared[thread_y][thread_x] = b_storage[batch * out_strides[0] + (i + tile_idx * TILE) * out_strides[1] + j * out_strides[2]];
+        a_shared[thread_y][thread_x] = a_storage[batch * a_batch_stride + i * out_strides[1] + (j + tile_idx * TILE) * out_strides[2]];
+        b_shared[thread_y][thread_x] = b_storage[batch * b_batch_stride + (i + tile_idx * TILE) * out_strides[1] + j * out_strides[2]];
         __syncthreads();
         // add partial values
         for (int k = 0; i < TILE; k++) {
