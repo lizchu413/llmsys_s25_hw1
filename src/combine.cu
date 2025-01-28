@@ -251,20 +251,15 @@ __global__ void MatrixMultiplyKernel(
     int out_pos = batch * out_strides[0] + i * out_strides[1] + j * out_strides[2];
     float res = 0;
     for (int tile_idx = 0; tile_idx < n / TILE + 1; tile_idx++) {
-        printf("tile_idx: %d\n", tile_idx);
         // move things into shared memory for each tile
         // their position (in the tile) corresponds to output position we want
         a_shared[thread_y][thread_x] = a_storage[batch * a_batch_stride + i * out_strides[1] + (j + tile_idx * TILE) * out_strides[2]];
         b_shared[thread_y][thread_x] = b_storage[batch * b_batch_stride + (i + tile_idx * TILE) * out_strides[1] + j * out_strides[2]];
-        printf("storing idx (%d, %d, %d) into (%d, %d) of a_shared\n", batch, i, j + tile_idx * TILE, thread_y, thread_x);
-        printf("storing idx (%d, %d, %d) into (%d, %d) of b_shared\n", batch, i + tile_idx * TILE, j, thread_y, thread_x);
         __syncthreads();
         // add partial values
         for (int k = 0; k < TILE; k++) {
-            printf("combining these values: (%d, %d) from a_shared and (%d, %d) from b_shared\n", thread_y, k, k, thread_x);
             res += a_shared[thread_y][k] * b_shared[k][thread_x];
         }
-        printf("done with this tile\n\n");
         __syncthreads();
     }
     out[out_pos] = res;
