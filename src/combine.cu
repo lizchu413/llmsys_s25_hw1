@@ -260,7 +260,7 @@ __global__ void MatrixMultiplyKernel(
         } else {
             a_shared[thread_x][thread_y] = 0;
             if (tile_idx > 0 && (row + tile_idx * TILE) == 4) {
-                printf("setting a_shared[%d][%d] to zero\n", thread_x, thread_y);
+                printf("setting a_shared[%d][%d] to zero as we are looking at [%d][%d]\n", thread_x, thread_y, row + tile_idx * TILE , col);
             }
         }
         if (row < b_shape[1] && (col + tile_idx * TILE) < b_shape[2]) {
