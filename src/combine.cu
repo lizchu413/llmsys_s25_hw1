@@ -269,7 +269,7 @@ __global__ void MatrixMultiplyKernel(
         }
         __syncthreads();
         // add partial values if the thread we are at is needed
-        if (row < out_shape[1] && col < out_shape[2])
+        if (batch < out_shape[0] && row < out_shape[1] && col < out_shape[2])
         {
             for (int k = 0; k < TILE; k++) {
                 if (k < n) {
