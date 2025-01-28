@@ -251,7 +251,7 @@ __global__ void MatrixMultiplyKernel(
     for (int tile_idx = 0; tile_idx < ceil(n / (float)TILE); tile_idx++) {
         // move things into shared memory for each tile
         // their position (in the tile) corresponds to output position we want
-        if (row + tile_idx * TILE < a_shape[1] && (col) < a_shape[2]) {
+        if ((row + tile_idx * TILE) < a_shape[1] && col < a_shape[2]) {
             a_shared[thread_x][thread_y] = a_storage[batch * a_batch_stride + (row + tile_idx * TILE) * a_strides[1] +
                                                      (col) * a_strides[2]];
 //            if (tile_idx > 0) {
@@ -260,7 +260,7 @@ __global__ void MatrixMultiplyKernel(
         } else {
             a_shared[thread_x][thread_y] = 0;
         }
-        if ((row) < b_shape[1] && (col + tile_idx * TILE)) < b_shape[2]) {
+        if (row < b_shape[1] && (col + tile_idx * TILE) < b_shape[2]) {
             b_shared[thread_x][thread_y] = b_storage[batch * b_batch_stride + (row) * b_strides[1] +
                                                      (col + tile_idx * TILE) * b_strides[2]];
 //            if (tile_idx > 0) {
