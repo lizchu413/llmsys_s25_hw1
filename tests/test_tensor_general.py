@@ -190,8 +190,8 @@ matmul_dims = [
 def test_cuda_matmul_numpy_eq(m, n, p, backend):
     # _a = [[random.random() for j in range(n)] for i in range(m)]
     # _b = [[random.random() for j in range(p)] for i in range(n)]
-    _a = [[j + i * n for j in range(n)] for i in range(m)]
-    _b = [[j + i * n + 20 for j in range(p)] for i in range(n)]
+    _a = [[j + 1 for j in range(n)] for i in range(m)]
+    _b = [[j + 20 for j in range(p)] for i in range(n)]
     c = minitorch.tensor(_a, backend=shared[backend]) @ minitorch.tensor(
         _b, backend=shared[backend])
     _c = np.array(_a) @ np.array(_b)
