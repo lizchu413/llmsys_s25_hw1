@@ -6,7 +6,7 @@
 
 #define BLOCK_DIM 1024
 #define MAX_DIMS 10
-#define TILE 4
+#define TILE 2
 
 #define ADD_FUNC       1
 #define MUL_FUNC       2
