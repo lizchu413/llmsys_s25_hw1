@@ -3,8 +3,8 @@ embeddings==0.0.8
 networkx==2.4
 plotly==4.14.3
 pydot==1.4.1
-python-mnist
+python-mnist == 0.7
 streamlit==1.12.0
-streamlit-ace
-torch
+streamlit-ace == 0.1.1
+torch == 2.5.1
 watchdog==1.0.2
