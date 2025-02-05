@@ -198,6 +198,7 @@ class SentenceSentimentTrain:
                 # 4. Calculate the loss using Binary Crossentropy Loss
                 # 5. Call backward function of the loss
                 # 6. Use Optimizer to take a gradient step
+                print(f"xtrain shape: {X_train.shape}")
                 x, y = minitorch.tensor(X_train[example_num]), minitorch.tensor(y_train[example_num])
                 x.requires_grad_(True)
                 y.requires_grad_(True)
