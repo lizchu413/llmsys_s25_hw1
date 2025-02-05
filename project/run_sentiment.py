@@ -205,10 +205,9 @@ class SentenceSentimentTrain:
                 x, y = minitorch.tensor(X_train_batch, backend=BACKEND), minitorch.tensor(y_train_batch, backend=BACKEND)
                 x.requires_grad_(True)
                 y.requires_grad_(True)
-                print(f"x shape {x.shape} y shape {y.shape}")
                 out = model.forward(x)
-                loss = model.loss(out, y)
-                loss.backward()
+                bce = y * out.log() + (1 - y) * (1 - out).log()
+                loss = -bce.mean()
                 optim.step()
                 # END ASSIGN1_4
                 
@@ -229,9 +228,9 @@ class SentenceSentimentTrain:
                 # 3. Obtain validation predictions using the get_predictions_array function, and add to the validation_predictions list
                 # 4. Obtain the validation accuracy using the get_accuracy function, and add to the validation_accuracy list
                 
-                x, y = minitorch.tensor(X_val), minitorch.tensor(y_val)
+                x, y = minitorch.tensor(X_val, backend=BACKEND), minitorch.tensor(y_val, backend=BACKEND)
                 out = model(x)
-                validation_predictions.append(get_predictions_array(y, out))
+                validation_predictions += get_predictions_array(y, out)
                 validation_accuracy.append(get_accuracy(validation_predictions))
                 # END ASSIGN1_4
                 
