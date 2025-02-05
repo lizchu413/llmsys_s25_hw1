@@ -49,6 +49,8 @@ class Linear(minitorch.Module):
         batch = x.shape[0]
         x = x.view(batch, self.in_size)
         self.weights.update(self.weights.value.view(self.in_size, self.out_size))
+        print(f"type of x: {type(x)}")
+        print(f"type of self.weights: {type(self.weights)}")
         res = x @ self.weights + self.bias.value
         return res
         # END ASSIGN1_3
@@ -101,7 +103,7 @@ class Network(minitorch.Module):
         print(f"embedding shape: {embeddings.shape}")
         avg = minitorch.Tensor.mean(embeddings, dim=1)
         print(f"avg shape: {avg.shape}")
-        first_lin = self.linear_one.forward(avg)
+        first_lin = self.linear_one.forward(avg) # should return a Tensor
         first_lin.relu()
         dropped_out = minitorch.dropout(first_lin, self.dropout_prob)
         second_lin = self.linear_two.forward(dropped_out)
