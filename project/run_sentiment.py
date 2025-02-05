@@ -207,6 +207,7 @@ class SentenceSentimentTrain:
                 y.requires_grad_(True)
                 out = model.forward(x)
                 bce = y * out.log() + (-y + 1) * (-out + 1).log()
+                print(bce.shape)
                 loss = -bce.mean()
                 optim.step()
                 # END ASSIGN1_4
