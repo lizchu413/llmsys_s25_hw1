@@ -98,7 +98,9 @@ class Network(minitorch.Module):
         # 4. Apply the second linear layer
         # 5. Apply sigmoid and reshape to (batch)
         # HINT: You can use minitorch.dropout for dropout, and minitorch.tensor.relu for ReLU
+        print(embeddings.shape)
         avg = minitorch.Tensor.mean(embeddings, dim=1)
+        print(avg.shape)
         first_lin = self.linear_one.forward(avg)
         first_lin.relu()
         dropped_out = minitorch.dropout(first_lin, self.dropout_prob)
