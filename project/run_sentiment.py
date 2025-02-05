@@ -199,7 +199,7 @@ class SentenceSentimentTrain:
                 x, y = minitorch.tensor(X_train[example_num]), minitorch.tensor(y_train[example_num])
                 x.requires_grad = True
                 y.requires_grad = True
-                out = model(x)
+                out = model.forward(x)
                 loss = model.loss(out, y)
                 loss.backward()
                 optim.step()
