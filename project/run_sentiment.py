@@ -190,15 +190,19 @@ class SentenceSentimentTrain:
                 out=None
                 
                 # BEGIN ASSIGN1_4
-                # TODO
                 # 1. Create x and y using minitorch.tensor function through our CudaKernelOps backend
                 # 2. Set requires_grad=True for x and y
                 # 3. Get the model output (as out)
                 # 4. Calculate the loss using Binary Crossentropy Loss
                 # 5. Call backward function of the loss
                 # 6. Use Optimizer to take a gradient step
-                
-                raise NotImplementedError
+                x, y = minitorch.tensor(X_train[example_num]), minitorch.tensor(y_train[example_num])
+                x.requires_grad = True
+                y.requires_grad = True
+                out = model(x)
+                loss = model.loss(out, y)
+                loss.backward()
+                optim.step()
                 # END ASSIGN1_4
                 
                 
@@ -214,14 +218,15 @@ class SentenceSentimentTrain:
                 model.eval()
                 
                 # BEGIN ASSIGN1_4
-                # TODO
                 # 1. Create x and y using minitorch.tensor function through our CudaKernelOps backend
                 # 2. Get the output of the model
                 # 3. Obtain validation predictions using the get_predictions_array function, and add to the validation_predictions list
                 # 4. Obtain the validation accuracy using the get_accuracy function, and add to the validation_accuracy list
                 
-                raise NotImplementedError
-                
+                x, y = minitorch.tensor(X_val), minitorch.tensor(y_val)
+                out = model(x)
+                validation_predictions.append(get_predictions_array(y, out))
+                validation_accuracy.append(get_accuracy(validation_predictions))
                 # END ASSIGN1_4
                 
                 model.train()
