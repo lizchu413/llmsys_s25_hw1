@@ -230,7 +230,7 @@ class SentenceSentimentTrain:
                 # 4. Obtain the validation accuracy using the get_accuracy function, and add to the validation_accuracy list
                 
                 x, y = minitorch.tensor(X_val, backend=BACKEND), minitorch.tensor(y_val, backend=BACKEND)
-                out = model(x)
+                out = model.forward(x)
                 validation_predictions += get_predictions_array(y, out)
                 validation_accuracy.append(get_accuracy(validation_predictions))
                 # END ASSIGN1_4
