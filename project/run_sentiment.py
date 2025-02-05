@@ -80,10 +80,10 @@ class Network(minitorch.Module):
         self.dropout_prob = dropout_prob
                 
         # BEGIN ASSIGN1_3
-        # TODO
         # 1. Construct two linear layers: the first one is embedding_dim * hidden_dim, the second one is hidden_dim * 1
+        self.linear_one = Linear(embedding_dim, hidden_dim)
+        self.linear_two = Linear(hidden_dim, 1)
 
-        raise NotImplementedError
         # END ASSIGN1_3
         
         
@@ -94,16 +94,20 @@ class Network(minitorch.Module):
         """
     
         # BEGIN ASSIGN1_3
-        # TODO
         # 1. Average the embeddings on the sentence length dimension to obtain a tensor of (batch, embedding_dim)
         # 2. Apply the first linear layer
         # 3. Apply ReLU and dropout (with dropout probability=self.dropout_prob)
         # 4. Apply the second linear layer
         # 5. Apply sigmoid and reshape to (batch)
         # HINT: You can use minitorch.dropout for dropout, and minitorch.tensor.relu for ReLU
-        
-        raise NotImplementedError
-    
+        avg = np.mean(embeddings, axis=1)
+        first_lin = self.linear_one.forward(avg)
+        first_lin.ReLU()
+        first_lin.Dropout(self.dropout_prob)
+        second_lin = self.linear_two.forward(first_lin)
+        second_lin.sigmoid()
+        second_lin = second_lin.reshape((embeddings.shape[0]))
+        return second_lin
         # END ASSIGN1_3
 
 
