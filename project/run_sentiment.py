@@ -49,7 +49,7 @@ class Linear(minitorch.Module):
         batch = x.shape[0]
         x = x.view(batch, self.in_size)
         weights = (self.weights.value.view(self.in_size, self.out_size))
-        res = x @ weights + self.bias.value
+        res = x.__matmul__(weights) + self.bias.value
         return res
         # END ASSIGN1_3
 
