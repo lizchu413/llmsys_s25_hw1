@@ -202,7 +202,6 @@ class SentenceSentimentTrain:
                 out = model.forward(x)
                 bce = y * out.log() + (-y + 1) * (-out + 1).log()
                 loss = -1 * bce.mean()
-                print(f"out: {out}; out.log: {out.log()}; out.log: {(-out + 1).log()}; bce: {bce}; loss: {loss}")
                 loss.backward()
                 optim.step()
                 # END ASSIGN1_4
