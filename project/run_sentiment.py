@@ -197,8 +197,8 @@ class SentenceSentimentTrain:
                 # 5. Call backward function of the loss
                 # 6. Use Optimizer to take a gradient step
                 x, y = minitorch.tensor(X_train[example_num]), minitorch.tensor(y_train[example_num])
-                x.requires_grad = True
-                y.requires_grad = True
+                x.requires_grad_(True)
+                y.requires_grad_(True)
                 out = model.forward(x)
                 loss = model.loss(out, y)
                 loss.backward()
