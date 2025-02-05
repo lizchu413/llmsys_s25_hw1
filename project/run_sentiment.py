@@ -102,7 +102,7 @@ class Network(minitorch.Module):
         first_lin.relu()
         dropped_out = minitorch.dropout(first_lin, rate=self.dropout_prob)
         second_lin = self.linear_two(dropped_out)
-        second_lin.sigmoid()
+        second_lin = second_lin.sigmoid()
         second_lin = second_lin.view(batch)
         return second_lin
         # END ASSIGN1_3
