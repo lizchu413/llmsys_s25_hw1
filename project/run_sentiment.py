@@ -201,7 +201,7 @@ class SentenceSentimentTrain:
                 x, y = minitorch.tensor(X_train[example_num]), minitorch.tensor(y_train[example_num])
                 x.requires_grad_(True)
                 y.requires_grad_(True)
-                print(x.shape, y.shape)
+                print(f"x shape {x.shape} y shape {y.shape}")
                 out = model.forward(x)
                 loss = model.loss(out, y)
                 loss.backward()
