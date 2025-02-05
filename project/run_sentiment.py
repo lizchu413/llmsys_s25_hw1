@@ -51,7 +51,7 @@ class Linear(minitorch.Module):
         self.weights.update(self.weights.value.view(self.in_size, self.out_size))
         print(f"type of x: {type(x)}")
         print(f"type of self.weights: {type(self.weights)}")
-        res = x @ self.weights + self.bias.value
+        res = x @ self.weights.value + self.bias.value
         return res
         # END ASSIGN1_3
 
