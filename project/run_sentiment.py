@@ -202,7 +202,7 @@ class SentenceSentimentTrain:
                 # 6. Use Optimizer to take a gradient step
                 X_train_batch = X_train[example_num:example_num + batch_size]
                 y_train_batch = y_train[example_num:example_num + batch_size]
-                x, y = minitorch.tensor(X_train_batch), minitorch.tensor(y_train_batch)
+                x, y = minitorch.tensor(X_train_batch, backend=BACKEND), minitorch.tensor(y_train_batch, backend=BACKEND)
                 x.requires_grad_(True)
                 y.requires_grad_(True)
                 print(f"x shape {x.shape} y shape {y.shape}")
