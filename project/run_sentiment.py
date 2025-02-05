@@ -210,7 +210,7 @@ class SentenceSentimentTrain:
                 loss = -bce.mean()
                 optim.step()
                 # END ASSIGN1_4
-                
+                print(loss)
                 # Save training results
                 train_predictions += get_predictions_array(y, out)
                 total_loss += loss[0]
