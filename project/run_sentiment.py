@@ -204,8 +204,6 @@ class SentenceSentimentTrain:
                 y_train_batch = y_train[example_num:example_num + batch_size]
                 x, y = (minitorch.tensor(X_train_batch, backend=BACKEND, requires_grad=True),
                         minitorch.tensor(y_train_batch, backend=BACKEND, requires_grad=True))
-                x.requires_grad_(True)
-                y.requires_grad_(True)
                 out = model.forward(x)
                 bce = y * out.log() + (-y + 1) * (-out + 1).log()
                 loss = -bce.mean()
