@@ -201,8 +201,8 @@ class SentenceSentimentTrain:
                         minitorch.tensor(y_train_batch, backend=BACKEND, requires_grad=True))
                 out = model.forward(x)
                 bce = y * out.log() + (-y + 1) * (-out + 1).log()
-                loss = -bce.mean()
-                print(f"out: {out}; bce: {bce}; loss: {loss}")
+                loss = -1 * bce.mean()
+                print(f"out: {out}; out.log: {out.log()}; out.log: {(-out + 1).log()}; bce: {bce}; loss: {loss}")
                 loss.backward()
                 optim.step()
                 # END ASSIGN1_4
