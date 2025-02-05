@@ -101,8 +101,8 @@ class Network(minitorch.Module):
         avg = minitorch.Tensor.mean(embeddings, dim=1)
         first_lin = self.linear_one.forward(avg)
         first_lin.relu()
-        first_lin.dropout(self.dropout_prob)
-        second_lin = self.linear_two.forward(first_lin)
+        dropped_out = minitorch.dropout(first_lin, self.dropout_prob)
+        second_lin = self.linear_two.forward(dropped_out)
         second_lin.sigmoid()
         second_lin = second_lin.view(embeddings.shape[0])
         return second_lin
