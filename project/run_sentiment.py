@@ -46,11 +46,11 @@ class Linear(minitorch.Module):
         # 3. Apply Matrix Multiplication on input x and self.weights, and reshape the output to be of size (batch, self.out_size)
         # 4. Add self.bias
         # HINT: You can use the view function of minitorch.tensor for reshape
-        batch = x.shape[0]
-        x = x.view(batch, self.in_size)
-        self.weights.update(self.weights.value.view(self.in_size, self.out_size))
-        print(f"type of x: {type(x)}")
-        print(f"type of self.weights: {type(self.weights)}")
+        # batch = x.shape[0]
+        # x = x.view(batch, self.in_size)
+        # self.weights.update(self.weights.value.view(self.in_size, self.out_size))
+        # print(f"type of x: {type(x)}")
+        # print(f"type of self.weights: {type(self.weights)}")
         res = x @ self.weights.value + self.bias.value
         return res
         # END ASSIGN1_3
@@ -100,15 +100,15 @@ class Network(minitorch.Module):
         # 4. Apply the second linear layer
         # 5. Apply sigmoid and reshape to (batch)
         # HINT: You can use minitorch.dropout for dropout, and minitorch.tensor.relu for ReLU
-        print(f"embedding shape: {embeddings.shape}")
-        avg = minitorch.Tensor.mean(embeddings, dim=1)
-        print(f"avg shape: {avg.shape}")
-        first_lin = self.linear_one.forward(avg) # should return a Tensor
+        batch = embeddings.shape[0]
+        avg = embeddings.mean(dim=1)
+        avg = avg.view(batch, self.embedding_dim)
+        first_lin = self.linear_one(avg) # should return a Tensor
         first_lin.relu()
         dropped_out = minitorch.dropout(first_lin, self.dropout_prob)
-        second_lin = self.linear_two.forward(dropped_out)
+        second_lin = self.linear_two(dropped_out)
         second_lin.sigmoid()
-        second_lin = second_lin.view(embeddings.shape[0])
+        second_lin = second_lin.view(batch)
         return second_lin
         # END ASSIGN1_3
 
